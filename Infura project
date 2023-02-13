@@ -1,0 +1,21 @@
+const Web3 = require('web3');
+
+async function main() {
+  const web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/v3/Infura PROJECT-ID"));
+
+  let blockNumber = 0;
+  let block = await web3.eth.getBlock(blockNumber);
+  while (block) {
+    for (const transaction of block.transactions) {
+      const tx = await web3.eth.getTransaction(transaction);
+      if (!tx.to) {
+        console.log(`The first contract-creation transaction is in block #${block.number}`);
+        return;
+      }
+    }
+    blockNumber++;
+    block = await web3.eth.getBlock(blockNumber);
+  }
+}
+
+main().catch(console.error);
